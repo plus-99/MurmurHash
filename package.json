@@ -1,0 +1,47 @@
+{
+  "name": "@plus99/murmur-hash",
+  "version": "1.0.0",
+  "description": "Pure TypeScript implementation of MurmurHash3 algorithm for Node.js and browsers",
+  "main": "dist/index.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "npm run build:cjs && npm run build:esm && npm run build:umd",
+    "build:cjs": "tsc",
+    "build:esm": "tsc --module esnext --outDir dist/esm && mv dist/esm/index.js dist/index.esm.js && rm -rf dist/esm",
+    "build:umd": "rollup -c",
+    "dev": "tsc --watch",
+    "test": "node dist/test.js",
+    "prepare": "npm run build"
+  },
+  "keywords": [
+    "murmur",
+    "hash",
+    "murmur3",
+    "typescript",
+    "nodejs",
+    "browser",
+    "crypto",
+    "algorithm"
+  ],
+  "author": "Plus99",
+  "license": "MIT",
+  "devDependencies": {
+    "@rollup/plugin-typescript": "^11.1.6",
+    "rollup": "^3.29.5",
+    "typescript": "^5.9.2"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.esm.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  }
+}
