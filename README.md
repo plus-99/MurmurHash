@@ -27,6 +27,10 @@ const { murmur3_32, MurmurHash } = require('@plus99/murmur-hash');
 const hash = murmur3_32('Hello, World!');
 console.log(hash); // 592631239
 
+// With custom seed
+const seededHash = murmur3_32('Hello, World!', 42);
+console.log(seededHash); // 1236340197
+
 // Using the class interface
 const hexHash = MurmurHash.hash32Hex('Hello, World!');
 console.log(hexHash); // "2352d5c7"
@@ -50,6 +54,12 @@ console.log(hash32Hex); // "2352d5c7"
 // 128-bit hash as hex string
 const hash128 = murmur3_128('Hello, World!');
 console.log(hash128); // "2352d5c72e493a0e746fca945714038f"
+
+// All functions support optional seed parameter
+const seeded32 = murmur3_32('Hello, World!', 42);
+const seeded32Hex = murmur3_32_hex('Hello, World!', 42);
+const seeded128 = murmur3_128('Hello, World!', 42);
+console.log({ seeded32, seeded32Hex, seeded128 });
 ```
 
 ### 2. Class API
@@ -59,12 +69,18 @@ const { MurmurHash } = require('@plus99/murmur-hash');
 
 const text = 'Hello, World!';
 
-// All methods are static
+// All methods are static and support optional seed
 const hash32 = MurmurHash.hash32(text);
 const hash32Hex = MurmurHash.hash32Hex(text);
 const hash128 = MurmurHash.hash128(text);
 
+// With custom seed
+const seededHash32 = MurmurHash.hash32(text, 42);
+const seededHash32Hex = MurmurHash.hash32Hex(text, 42);
+const seededHash128 = MurmurHash.hash128(text, 42);
+
 console.log({ hash32, hash32Hex, hash128 });
+console.log({ seededHash32, seededHash32Hex, seededHash128 });
 ```
 
 ### 3. ES Modules
@@ -81,16 +97,19 @@ const classHash = MurmurHash.hash32('Hello, World!');
 ```typescript
 import { murmur3_32, murmur3_32_hex, murmur3_128, MurmurHash } from '@plus99/murmur-hash';
 
-// All functions are fully typed
+// All functions are fully typed with optional seed
 const data: string = 'Hello, World!';
 const seed: number = 42;
 
-const hash32: number = murmur3_32(data, seed);
+// Function API with optional seed (defaults to 0 if not provided)
+const hash32: number = murmur3_32(data);           // No seed
+const seededHash32: number = murmur3_32(data, seed); // With seed
 const hash32Hex: string = murmur3_32_hex(data, seed);
 const hash128: string = murmur3_128(data, seed);
 
-// Class methods are also typed
-const classHash: number = MurmurHash.hash32(data, seed);
+// Class methods are also fully typed with optional seed
+const classHash: number = MurmurHash.hash32(data);
+const seededClassHash: number = MurmurHash.hash32(data, seed);
 ```
 
 ### 5. Browser (UMD)
