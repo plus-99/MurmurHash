@@ -10,9 +10,11 @@ export default {
   },
   plugins: [
     typescript({
-      tsconfig: './tsconfig.json',
+      target: 'ES2020',
+      module: 'ES2020',
       declaration: false,
-      declarationMap: false
+      declarationMap: false,
+      outDir: 'dist/umd'
     })
   ]
 };

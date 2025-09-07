@@ -3,10 +3,10 @@
  * Compatible with Node.js, browsers, CommonJS, ES modules, and TypeScript
  */
 
-export { murmur3_32, murmur3_32_hex, murmur3_128 } from './murmur3';
+export { murmur3_32, murmur3_32_hex, murmur3_128 } from './murmur3.js';
 
 // Default export for convenience
-import { murmur3_32, murmur3_32_hex, murmur3_128 } from './murmur3';
+import { murmur3_32, murmur3_32_hex, murmur3_128 } from './murmur3.js';
 
 /**
  * MurmurHash utility class with static methods
