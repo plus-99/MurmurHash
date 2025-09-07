@@ -13,7 +13,7 @@ Thank you for your interest in contributing to this project! This guide will hel
 
 1. **Clone and setup the project:**
    ```bash
-   git clone <repository-url>
+   git clone git@github.com:plus-99/MurmurHash.git
    cd murmur-hash
    npm install
    ```
