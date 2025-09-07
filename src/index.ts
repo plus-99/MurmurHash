@@ -1,0 +1,38 @@
+/**
+ * @plus99/murmur-hash - Pure TypeScript MurmurHash3 implementation
+ * Compatible with Node.js, browsers, CommonJS, ES modules, and TypeScript
+ */
+
+export { murmur3_32, murmur3_32_hex, murmur3_128 } from './murmur3';
+
+// Default export for convenience
+import { murmur3_32, murmur3_32_hex, murmur3_128 } from './murmur3';
+
+/**
+ * MurmurHash utility class with static methods
+ */
+export class MurmurHash {
+  /**
+   * Generate 32-bit hash as number
+   */
+  static hash32(data: string | Uint8Array, seed: number = 0): number {
+    return murmur3_32(data, seed);
+  }
+
+  /**
+   * Generate 32-bit hash as hex string
+   */
+  static hash32Hex(data: string | Uint8Array, seed: number = 0): string {
+    return murmur3_32_hex(data, seed);
+  }
+
+  /**
+   * Generate 128-bit hash as hex string
+   */
+  static hash128(data: string | Uint8Array, seed: number = 0): string {
+    return murmur3_128(data, seed);
+  }
+}
+
+// Default export
+export default MurmurHash;
