@@ -143,3 +143,112 @@ export function murmur3_128(data: string | Uint8Array, seed: number = 0): string
          hash3.toString(16).padStart(8, '0') +
          hash4.toString(16).padStart(8, '0');
 }
+
+/**
+ * MurmurHash2 32-bit hash function
+ * Based on the original implementation by Austin Appleby
+ */
+export function murmur2_32(data: string | Uint8Array, seed: number = 0): number {
+  const bytes = typeof data === 'string' ? stringToUtf8Bytes(data) : data;
+  const len = bytes.length;
+  const m = 0x5bd1e995;
+  const r = 24;
+
+  let h = seed ^ len;
+
+  // Process 4-byte chunks
+  const numBlocks = Math.floor(len / 4);
+  for (let i = 0; i < numBlocks; i++) {
+    let k = (bytes[i * 4] |
+             (bytes[i * 4 + 1] << 8) |
+             (bytes[i * 4 + 2] << 16) |
+             (bytes[i * 4 + 3] << 24)) >>> 0;
+
+    k = imul(k, m);
+    k ^= k >>> r;
+    k = imul(k, m);
+
+    h = imul(h, m);
+    h ^= k;
+  }
+
+  // Process remaining bytes
+  const remainingBytes = len % 4;
+  if (remainingBytes > 0) {
+    const offset = numBlocks * 4;
+    
+    if (remainingBytes >= 3) {
+      h ^= bytes[offset + 2] << 16;
+    }
+    if (remainingBytes >= 2) {
+      h ^= bytes[offset + 1] << 8;
+    }
+    if (remainingBytes >= 1) {
+      h ^= bytes[offset];
+    }
+    
+    h = imul(h, m);
+  }
+
+  // Final mix
+  h ^= h >>> 13;
+  h = imul(h, m);
+  h ^= h >>> 15;
+
+  return h >>> 0; // Ensure unsigned 32-bit integer
+}
+
+/**
+ * MurmurHash2 32-bit hash as hex string
+ */
+export function murmur2_32_hex(data: string | Uint8Array, seed: number = 0): string {
+  const hash = murmur2_32(data, seed);
+  return hash.toString(16).padStart(8, '0');
+}
+
+/**
+ * MurmurHash2 64-bit hash function
+ * Returns as hex string since JavaScript numbers can't reliably represent 64-bit integers
+ */
+export function murmur2_64(data: string | Uint8Array, seed: number = 0): string {
+  const bytes = typeof data === 'string' ? stringToUtf8Bytes(data) : data;
+  const len = bytes.length;
+  const m = 0xc6a4a7935bd1e995n;
+  const r = 47n;
+
+  let h = (BigInt(seed) ^ BigInt(len)) * m;
+
+  // Process 8-byte chunks
+  const numBlocks = Math.floor(len / 8);
+  for (let i = 0; i < numBlocks; i++) {
+    let k = 0n;
+    for (let j = 0; j < 8; j++) {
+      k |= BigInt(bytes[i * 8 + j]) << BigInt(j * 8);
+    }
+
+    k = (k * m) & 0xffffffffffffffffn;
+    k ^= k >> r;
+    k = (k * m) & 0xffffffffffffffffn;
+
+    h ^= k;
+    h = (h * m) & 0xffffffffffffffffn;
+  }
+
+  // Process remaining bytes
+  const remainingBytes = len % 8;
+  if (remainingBytes > 0) {
+    const offset = numBlocks * 8;
+    
+    for (let i = remainingBytes - 1; i >= 0; i--) {
+      h ^= BigInt(bytes[offset + i]) << BigInt(i * 8);
+    }
+    h = (h * m) & 0xffffffffffffffffn;
+  }
+
+  // Final mix
+  h ^= h >> r;
+  h = (h * m) & 0xffffffffffffffffn;
+  h ^= h >> r;
+
+  return h.toString(16).padStart(16, '0');
+}
