@@ -1,12 +1,13 @@
 # @plus99/murmur-hash
 
-A fast, pure TypeScript implementation of the MurmurHash3 algorithm with zero dependencies. Works seamlessly across Node.js, browsers, CommonJS, ES modules, and TypeScript environments.
+A fast, pure TypeScript implementation of both MurmurHash2 and MurmurHash3 algorithms with zero dependencies. Works seamlessly across Node.js, browsers, CommonJS, ES modules, and TypeScript environments.
 
 ## Features
 
 - ✅ **Zero dependencies** - Pure TypeScript implementation
 - ✅ **Universal compatibility** - Works in Node.js, browsers, and all module systems
-- ✅ **Multiple hash formats** - 32-bit and 128-bit hashing
+- ✅ **Multiple algorithms** - MurmurHash2 (32-bit, 64-bit) and MurmurHash3 (32-bit, 128-bit)
+- ✅ **Multiple hash formats** - Support for both integer and hex string outputs
 - ✅ **High performance** - 100,000+ hashes per second
 - ✅ **TypeScript support** - Full type definitions included
 - ✅ **Flexible inputs** - Supports strings and byte arrays
@@ -21,11 +22,15 @@ npm install @plus99/murmur-hash
 ## Quick Start
 
 ```javascript
-const { murmur3_32, MurmurHash } = require('@plus99/murmur-hash');
+const { murmur3_32, murmur2_32, MurmurHash } = require('@plus99/murmur-hash');
 
-// Simple 32-bit hash
-const hash = murmur3_32('Hello, World!');
-console.log(hash); // 592631239
+// MurmurHash3 32-bit hash
+const hash3 = murmur3_32('Hello, World!');
+console.log(hash3); // 592631239
+
+// MurmurHash2 32-bit hash (faster)
+const hash2 = murmur2_32('Hello, World!');
+console.log(hash2); // 765620163
 
 // With custom seed
 const seededHash = murmur3_32('Hello, World!', 42);
@@ -41,25 +46,35 @@ console.log(hexHash); // "2352d5c7"
 ### 1. Function API
 
 ```javascript
-const { murmur3_32, murmur3_32_hex, murmur3_128 } = require('@plus99/murmur-hash');
+const { 
+  murmur3_32, murmur3_32_hex, murmur3_128,
+  murmur2_32, murmur2_32_hex, murmur2_64 
+} = require('@plus99/murmur-hash');
 
-// 32-bit hash as number
-const hash32 = murmur3_32('Hello, World!');
-console.log(hash32); // 592631239
+// MurmurHash3 functions
+const hash3_32 = murmur3_32('Hello, World!');
+console.log(hash3_32); // 592631239
 
-// 32-bit hash as hex string
-const hash32Hex = murmur3_32_hex('Hello, World!');
-console.log(hash32Hex); // "2352d5c7"
+const hash3_32Hex = murmur3_32_hex('Hello, World!');
+console.log(hash3_32Hex); // "2352d5c7"
 
-// 128-bit hash as hex string
-const hash128 = murmur3_128('Hello, World!');
-console.log(hash128); // "2352d5c72e493a0e746fca945714038f"
+const hash3_128 = murmur3_128('Hello, World!');
+console.log(hash3_128); // "2352d5c72e493a0e746fca945714038f"
+
+// MurmurHash2 functions (faster performance)
+const hash2_32 = murmur2_32('Hello, World!');
+console.log(hash2_32); // 765620163
+
+const hash2_32Hex = murmur2_32_hex('Hello, World!');
+console.log(hash2_32Hex); // "2da26fc3"
+
+const hash2_64 = murmur2_64('Hello, World!');
+console.log(hash2_64); // "3874f08551a9e19a"
 
 // All functions support optional seed parameter
-const seeded32 = murmur3_32('Hello, World!', 42);
-const seeded32Hex = murmur3_32_hex('Hello, World!', 42);
-const seeded128 = murmur3_128('Hello, World!', 42);
-console.log({ seeded32, seeded32Hex, seeded128 });
+const seeded3_32 = murmur3_32('Hello, World!', 42);
+const seeded2_32 = murmur2_32('Hello, World!', 42);
+console.log({ seeded3_32, seeded2_32 });
 ```
 
 ### 2. Class API
@@ -69,18 +84,23 @@ const { MurmurHash } = require('@plus99/murmur-hash');
 
 const text = 'Hello, World!';
 
-// All methods are static and support optional seed
-const hash32 = MurmurHash.hash32(text);
-const hash32Hex = MurmurHash.hash32Hex(text);
-const hash128 = MurmurHash.hash128(text);
+// MurmurHash3 methods (default, backwards compatible)
+const hash3_32 = MurmurHash.hash32(text);
+const hash3_32Hex = MurmurHash.hash32Hex(text);
+const hash3_128 = MurmurHash.hash128(text);
+
+// MurmurHash2 methods (faster performance)
+const hash2_32 = MurmurHash.hash2_32(text);
+const hash2_32Hex = MurmurHash.hash2_32Hex(text);
+const hash2_64 = MurmurHash.hash2_64(text);
 
 // With custom seed
-const seededHash32 = MurmurHash.hash32(text, 42);
-const seededHash32Hex = MurmurHash.hash32Hex(text, 42);
-const seededHash128 = MurmurHash.hash128(text, 42);
+const seededHash3 = MurmurHash.hash32(text, 42);
+const seededHash2 = MurmurHash.hash2_32(text, 42);
 
-console.log({ hash32, hash32Hex, hash128 });
-console.log({ seededHash32, seededHash32Hex, seededHash128 });
+console.log('MurmurHash3:', { hash3_32, hash3_32Hex, hash3_128 });
+console.log('MurmurHash2:', { hash2_32, hash2_32Hex, hash2_64 });
+console.log('Seeded:', { seededHash3, seededHash2 });
 ```
 
 ### 3. ES Modules
@@ -95,21 +115,31 @@ const classHash = MurmurHash.hash32('Hello, World!');
 ### 4. TypeScript
 
 ```typescript
-import { murmur3_32, murmur3_32_hex, murmur3_128, MurmurHash } from '@plus99/murmur-hash';
+import { 
+  murmur3_32, murmur3_32_hex, murmur3_128,
+  murmur2_32, murmur2_32_hex, murmur2_64,
+  MurmurHash 
+} from '@plus99/murmur-hash';
 
 // All functions are fully typed with optional seed
 const data: string = 'Hello, World!';
 const seed: number = 42;
 
-// Function API with optional seed (defaults to 0 if not provided)
-const hash32: number = murmur3_32(data);           // No seed
-const seededHash32: number = murmur3_32(data, seed); // With seed
-const hash32Hex: string = murmur3_32_hex(data, seed);
-const hash128: string = murmur3_128(data, seed);
+// MurmurHash3 API with optional seed (defaults to 0 if not provided)
+const hash3_32: number = murmur3_32(data);           // No seed
+const seededHash3_32: number = murmur3_32(data, seed); // With seed
+const hash3_32Hex: string = murmur3_32_hex(data, seed);
+const hash3_128: string = murmur3_128(data, seed);
+
+// MurmurHash2 API with optional seed
+const hash2_32: number = murmur2_32(data);
+const seededHash2_32: number = murmur2_32(data, seed);
+const hash2_32Hex: string = murmur2_32_hex(data, seed);
+const hash2_64: string = murmur2_64(data, seed);
 
 // Class methods are also fully typed with optional seed
-const classHash: number = MurmurHash.hash32(data);
-const seededClassHash: number = MurmurHash.hash32(data, seed);
+const classHash3: number = MurmurHash.hash32(data);
+const classHash2: number = MurmurHash.hash2_32(data, seed);
 ```
 
 ### 5. Browser (UMD)
@@ -144,22 +174,41 @@ console.log(hash === stringHash); // true
 ### 7. Seeded Hashing
 
 ```javascript
-const { murmur3_32 } = require('@plus99/murmur-hash');
+const { murmur3_32, murmur2_32 } = require('@plus99/murmur-hash');
 
 const text = 'Hello, World!';
 
-// Different seeds produce different hashes
-const hash1 = murmur3_32(text, 0);    // Default seed
-const hash2 = murmur3_32(text, 42);   // Custom seed
-const hash3 = murmur3_32(text, 123);  // Another seed
+// Different seeds produce different hashes for both algorithms
+const hash3_seed0 = murmur3_32(text, 0);    // MurmurHash3 with seed 0
+const hash3_seed42 = murmur3_32(text, 42);  // MurmurHash3 with seed 42
+const hash2_seed0 = murmur2_32(text, 0);    // MurmurHash2 with seed 0
+const hash2_seed42 = murmur2_32(text, 42);  // MurmurHash2 with seed 42
 
-console.log({ hash1, hash2, hash3 });
+console.log('MurmurHash3:', { hash3_seed0, hash3_seed42 });
+console.log('MurmurHash2:', { hash2_seed0, hash2_seed42 });
 // All different values
+```
+
+### 8. Algorithm Comparison
+
+```javascript
+const { murmur3_32, murmur2_32, murmur2_64 } = require('@plus99/murmur-hash');
+
+const data = 'Hello, World!';
+
+// Compare outputs from different algorithms
+const results = {
+  murmur3_32: murmur3_32(data),           // 592631239
+  murmur2_32: murmur2_32(data),           // 765620163  
+  murmur2_64: murmur2_64(data)            // "3874f08551a9e19a"
+};
+
+console.log(results);
 ```
 
 ## API Reference
 
-### Functions
+### MurmurHash3 Functions
 
 #### `murmur3_32(data, seed?): number`
 - **data**: `string | Uint8Array` - The data to hash
@@ -176,31 +225,70 @@ console.log({ hash1, hash2, hash3 });
 - **seed**: `number` (optional, default: 0) - Seed value for the hash
 - **Returns**: `string` - 128-bit hash as 32-character hex string
 
+### MurmurHash2 Functions
+
+#### `murmur2_32(data, seed?): number`
+- **data**: `string | Uint8Array` - The data to hash
+- **seed**: `number` (optional, default: 0) - Seed value for the hash
+- **Returns**: `number` - 32-bit hash as unsigned integer
+
+#### `murmur2_32_hex(data, seed?): string`
+- **data**: `string | Uint8Array` - The data to hash
+- **seed**: `number` (optional, default: 0) - Seed value for the hash
+- **Returns**: `string` - 32-bit hash as 8-character hex string
+
+#### `murmur2_64(data, seed?): string`
+- **data**: `string | Uint8Array` - The data to hash
+- **seed**: `number` (optional, default: 0) - Seed value for the hash
+- **Returns**: `string` - 64-bit hash as 16-character hex string
+
 ### MurmurHash Class
 
-#### `MurmurHash.hash32(data, seed?): number`
-Same as `murmur3_32()`
+#### MurmurHash3 Methods
+- `MurmurHash.hash32(data, seed?): number` - Same as `murmur3_32()`
+- `MurmurHash.hash32Hex(data, seed?): string` - Same as `murmur3_32_hex()`
+- `MurmurHash.hash128(data, seed?): string` - Same as `murmur3_128()`
 
-#### `MurmurHash.hash32Hex(data, seed?): string`
-Same as `murmur3_32_hex()`
-
-#### `MurmurHash.hash128(data, seed?): string`
-Same as `murmur3_128()`
+#### MurmurHash2 Methods
+- `MurmurHash.hash2_32(data, seed?): number` - Same as `murmur2_32()`
+- `MurmurHash.hash2_32Hex(data, seed?): string` - Same as `murmur2_32_hex()`
+- `MurmurHash.hash2_64(data, seed?): string` - Same as `murmur2_64()`
 
 ## Performance
 
-The library is highly optimized and can process over 100,000 hashes per second:
+The library is highly optimized and can process over 100,000 hashes per second. MurmurHash2 is generally faster than MurmurHash3:
 
 ```javascript
-const { murmur3_32 } = require('@plus99/murmur-hash');
+const { murmur3_32, murmur2_32 } = require('@plus99/murmur-hash');
 
-console.time('100k hashes');
+// MurmurHash3 performance
+console.time('MurmurHash3 - 100k hashes');
 for (let i = 0; i < 100000; i++) {
   murmur3_32(`test-string-${i}`);
 }
-console.timeEnd('100k hashes');
-// Typically: 100k hashes: 50-100ms
+console.timeEnd('MurmurHash3 - 100k hashes');
+// Typically: 50-100ms
+
+// MurmurHash2 performance (faster)
+console.time('MurmurHash2 - 100k hashes');
+for (let i = 0; i < 100000; i++) {
+  murmur2_32(`test-string-${i}`);
+}
+console.timeEnd('MurmurHash2 - 100k hashes');
+// Typically: 30-70ms
 ```
+
+### Choosing Between MurmurHash2 and MurmurHash3
+
+**Use MurmurHash2 when:**
+- You need maximum performance
+- Working with smaller datasets
+- Compatibility with existing MurmurHash2 implementations
+
+**Use MurmurHash3 when:**
+- You need better hash distribution quality
+- Working with larger datasets or high-collision scenarios
+- Want the latest algorithm improvements
 
 ## Compatibility
 
@@ -213,32 +301,54 @@ console.timeEnd('100k hashes');
 
 ### 1. Hash Tables and Caching
 ```javascript
+const { murmur2_32_hex } = require('@plus99/murmur-hash');
 const cache = new Map();
 
 function getCachedData(key) {
-  const hashKey = murmur3_32_hex(key);
+  // Use MurmurHash2 for speed in caching scenarios
+  const hashKey = murmur2_32_hex(key);
   return cache.get(hashKey);
 }
 ```
 
 ### 2. Data Fingerprinting
 ```javascript
+const { murmur3_128 } = require('@plus99/murmur-hash');
+
 function getFileFingerprint(fileContent) {
+  // Use MurmurHash3 for better collision resistance
   return murmur3_128(fileContent);
 }
 ```
 
 ### 3. Distributed Systems
 ```javascript
+const { murmur3_32, murmur2_32 } = require('@plus99/murmur-hash');
+
 function getShardId(userId, numShards) {
+  // Use MurmurHash3 for better distribution across shards
   const hash = murmur3_32(userId);
+  return hash % numShards;
+}
+
+function getFastShardId(userId, numShards) {
+  // Use MurmurHash2 when speed is more important than distribution
+  const hash = murmur2_32(userId);
   return hash % numShards;
 }
 ```
 
-### 4. Checksums
+### 4. Checksums and Validation
 ```javascript
+const { murmur2_32_hex, murmur3_32_hex } = require('@plus99/murmur-hash');
+
 function validateData(data, expectedHash) {
+  // Fast validation with MurmurHash2
+  return murmur2_32_hex(data) === expectedHash;
+}
+
+function secureValidateData(data, expectedHash) {
+  // More secure validation with MurmurHash3
   return murmur3_32_hex(data) === expectedHash;
 }
 ```

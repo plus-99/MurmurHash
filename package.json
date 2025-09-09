@@ -1,7 +1,7 @@
 {
   "name": "@plus99/murmur-hash",
   "version": "1.0.1",
-  "description": "Pure TypeScript implementation of MurmurHash algorithm for Node.js and browsers",
+  "description": "Pure TypeScript implementation of MurmurHash2 and MurmurHash3 algorithms for Node.js and browsers",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
   "types": "dist/index.d.ts",
@@ -20,7 +20,9 @@
   "keywords": [
     "murmur",
     "hash",
+    "murmur2",
     "murmur3",
+    "murmurhash",
     "typescript",
     "nodejs",
     "browser",
