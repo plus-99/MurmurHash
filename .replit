@@ -21,9 +21,9 @@ args = "MurmurHash Tests"
 name = "MurmurHash Tests"
 author = "agent"
 
+[workflows.workflow.metadata]
+outputType = "console"
+
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "node test.js"
-
-[workflows.workflow.metadata]
-outputType = "console"
