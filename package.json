@@ -29,6 +29,14 @@
   ],
   "author": "Plus99",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/plus-99/MurmurHash.git"
+  },
+  "homepage": "https://github.com/plus-99/MurmurHash#readme",
+  "bugs": {
+    "url": "https://github.com/plus-99/MurmurHash/issues"
+  },
   "devDependencies": {
     "@rollup/plugin-typescript": "^11.1.6",
     "rollup": "^3.29.5",
