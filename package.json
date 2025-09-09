@@ -1,7 +1,17 @@
 {
   "name": "@plus99/murmur-hash",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Pure TypeScript implementation of MurmurHash2 and MurmurHash3 algorithms for Node.js and browsers",
+  "author": "Plus99",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/plus-99/MurmurHash.git"
+  },
+  "homepage": "https://github.com/plus-99/MurmurHash#readme",
+  "bugs": {
+    "url": "https://github.com/plus-99/MurmurHash/issues"
+  },
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
   "types": "dist/index.d.ts",
@@ -29,16 +39,6 @@
     "crypto",
     "algorithm"
   ],
-  "author": "Plus99",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/plus-99/MurmurHash.git"
-  },
-  "homepage": "https://github.com/plus-99/MurmurHash#readme",
-  "bugs": {
-    "url": "https://github.com/plus-99/MurmurHash/issues"
-  },
   "devDependencies": {
     "@rollup/plugin-typescript": "^11.1.6",
     "rollup": "^3.29.5",
